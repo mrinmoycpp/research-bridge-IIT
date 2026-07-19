@@ -1,0 +1,36 @@
+require("dotenv").config();
+
+const express = require("express");
+const cors = require("cors");
+const apiRoutes = require("./src/routes");
+const errorHandler = require("./src/middlewares/errorHandler");
+
+const app = express();
+
+app.use(cors());
+app.use(express.json());
+
+app.get("/", (req, res) => {
+  res.json({
+    message: "IIT Professor Database API is running",
+    endpoints: {
+      professors: "/api/professors",
+      iits: "/api/iits",
+      researchAreas: "/api/research-areas",
+      publications: "/api/publications",
+      opportunities: "/api/opportunities",
+      search: "/api/search/suggestions",
+      stats: "/api/stats",
+    },
+  });
+});
+
+app.use("/api", apiRoutes);
+
+app.use(errorHandler);
+
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});

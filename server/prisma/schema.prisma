@@ -1,0 +1,131 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Institute {
+  id          Int          @id @default(autoincrement())
+  name        String
+  shortName   String       @unique
+  location    String?
+  website     String?
+
+  departments Department[]
+
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+}
+
+model Department {
+  id          Int       @id @default(autoincrement())
+  name        String
+
+  instituteId Int
+  institute   Institute @relation(fields: [instituteId], references: [id], onDelete: Cascade)
+
+  professors  Professor[]
+
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@unique([name, instituteId])
+}
+
+model Professor {
+  id           Int       @id @default(autoincrement())
+  name         String
+  designation  String?
+  email        String?
+  profileImage String?
+  profileUrl   String?
+  bio          String?
+
+  departmentId Int
+  department   Department @relation(fields: [departmentId], references: [id], onDelete: Cascade)
+
+  researchAreas ProfessorResearchArea[]
+  publications  Publication[]
+  opportunities Opportunity[]
+  applications  Application[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([name, departmentId])
+}
+
+model ResearchArea {
+  id          Int       @id @default(autoincrement())
+  name        String    @unique
+  description String?
+
+  professors ProfessorResearchArea[]
+
+  createdAt DateTime @default(now())
+}
+
+model ProfessorResearchArea {
+  professorId    Int
+  researchAreaId Int
+
+  professor    Professor    @relation(fields: [professorId], references: [id], onDelete: Cascade)
+  researchArea ResearchArea @relation(fields: [researchAreaId], references: [id], onDelete: Cascade)
+
+  @@id([professorId, researchAreaId])
+}
+
+model Publication {
+  id            Int       @id @default(autoincrement())
+  title         String
+  year          Int?
+  journal       String?
+  doi           String?
+  citationCount Int?
+
+  professorId Int
+  professor   Professor @relation(fields: [professorId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+}
+
+model Opportunity {
+  id          Int       @id @default(autoincrement())
+  title       String
+  description String?
+  type        String?
+  deadline    DateTime?
+  isActive    Boolean   @default(true)
+
+  professorId Int
+  professor   Professor @relation(fields: [professorId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  name      String
+  password  String
+  createdAt DateTime @default(now())
+
+  applications Application[]
+}
+
+model Application {
+  id           Int      @id @default(autoincrement())
+  status       String   @default("interested")
+  notes        String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  userId       Int
+  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  professorId  Int
+  professor    Professor  @relation(fields: [professorId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, professorId])
+}
