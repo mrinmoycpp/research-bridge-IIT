@@ -5,83 +5,62 @@ const {
 } = require("../utils/helpers");
 
 async function getAllIITs() {
-  const institutes = await prisma.institute.findMany({
-    include: {
-      departments: {
-        include: {
-          professors: {
-            include: {
-              researchAreas: {
-                include: { researchArea: true },
-              },
-            },
-          },
-        },
-      },
-    },
-    orderBy: { name: "asc" },
-  });
+  const instituteRows = await prisma.$queryRaw`
+    SELECT i.id, i."shortName", i.name,
+      (SELECT COUNT(*)::int FROM "Department" d WHERE d."instituteId" = i.id) as "deptCount",
+      (SELECT COUNT(*)::int FROM "Professor" p JOIN "Department" d ON p."departmentId" = d.id WHERE d."instituteId" = i.id) as "profCount"
+    FROM "Institute" i
+    ORDER BY i.name ASC
+  `;
 
-  return institutes.map((inst) => transformIIT(inst));
+  return instituteRows.map((inst) => {
+    const meta = getIITMeta(inst.shortName);
+    return {
+      id: slugify(inst.shortName),
+      code: inst.shortName,
+      name: inst.name,
+      city: meta.city,
+      state: meta.state,
+      established: meta.established,
+      description: meta.description,
+      departments: inst.deptCount,
+      professorCount: inst.profCount,
+      popularAreas: [],
+      ranking: meta.ranking,
+    };
+  });
 }
 
 async function getIITById(id) {
-  const institutes = await prisma.institute.findMany({
-    include: {
-      departments: {
-        include: {
-          professors: {
-            include: {
-              researchAreas: {
-                include: { researchArea: true },
-              },
-            },
-          },
-        },
-      },
-    },
-  });
+  const normalizedId = id.replace(/-/g, " ");
 
-  const found = institutes.find(
-    (inst) => slugify(inst.shortName) === id || slugify(inst.name) === id
-  );
+  const rows = await prisma.$queryRaw`
+    SELECT i.id, i."shortName", i.name,
+      (SELECT COUNT(*)::int FROM "Department" d WHERE d."instituteId" = i.id) as "deptCount",
+      (SELECT COUNT(*)::int FROM "Professor" p JOIN "Department" d ON p."departmentId" = d.id WHERE d."instituteId" = i.id) as "profCount"
+    FROM "Institute" i
+    WHERE LOWER(i."shortName") = LOWER(${normalizedId})
+       OR LOWER(REPLACE(i."shortName", ' ', '-')) = LOWER(${id})
+       OR LOWER(i.name) LIKE LOWER(${`%${normalizedId}%`})
+    LIMIT 1
+  `;
 
-  return found ? transformIIT(found) : undefined;
-}
+  if (!rows.length) return undefined;
 
-function transformIIT(inst) {
-  const id = slugify(inst.shortName);
+  const inst = rows[0];
   const meta = getIITMeta(inst.shortName);
 
-  const allProfessors = inst.departments.flatMap((d) => d.professors);
-  const totalProfessors = allProfessors.length;
-
-  const areaCounts = {};
-  allProfessors.forEach((p) => {
-    p.researchAreas.forEach((ra) => {
-      const areaSlug = slugify(ra.researchArea.name);
-      if (areaSlug) {
-        areaCounts[areaSlug] = (areaCounts[areaSlug] || 0) + 1;
-      }
-    });
-  });
-
-  const popularAreas = Object.entries(areaCounts)
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, 5)
-    .map(([area]) => area);
-
   return {
-    id,
+    id: slugify(inst.shortName),
     code: inst.shortName,
     name: inst.name,
     city: meta.city,
     state: meta.state,
     established: meta.established,
     description: meta.description,
-    departments: inst.departments.length,
-    professorCount: totalProfessors,
-    popularAreas,
+    departments: inst.deptCount,
+    professorCount: inst.profCount,
+    popularAreas: [],
     ranking: meta.ranking,
   };
 }

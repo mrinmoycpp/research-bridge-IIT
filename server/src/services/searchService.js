@@ -1,21 +1,48 @@
 const prisma = require("../config/db");
-const { slugify, professorSlug } = require("../utils/helpers");
+const { slugify } = require("../utils/helpers");
 
 async function getSearchSuggestions(query) {
   if (!query || !query.trim()) return [];
 
   const q = query.trim();
-  const suggestions = [];
 
-  const professors = await prisma.professor.findMany({
-    where: {
-      name: { contains: q, mode: "insensitive" },
-    },
-    include: {
-      department: { include: { institute: true } },
-    },
-    take: 4,
-  });
+  const [professors, institutes, areas, pubs] = await Promise.all([
+    prisma.professor.findMany({
+      where: {
+        name: { contains: q, mode: "insensitive" },
+      },
+      include: {
+        department: { include: { institute: true } },
+      },
+      take: 4,
+    }),
+    prisma.institute.findMany({
+      where: {
+        OR: [
+          { name: { contains: q, mode: "insensitive" } },
+          { shortName: { contains: q, mode: "insensitive" } },
+        ],
+      },
+      take: 3,
+    }),
+    prisma.researchArea.findMany({
+      where: {
+        name: { contains: q, mode: "insensitive" },
+      },
+      include: {
+        professors: true,
+      },
+      take: 3,
+    }),
+    prisma.publication.findMany({
+      where: {
+        title: { contains: q, mode: "insensitive" },
+      },
+      take: 3,
+    }),
+  ]);
+
+  const suggestions = [];
 
   professors.forEach((p) => {
     suggestions.push({
@@ -24,16 +51,6 @@ async function getSearchSuggestions(query) {
       label: p.name,
       sublabel: `${p.department.name} · ${p.department.institute.shortName}`,
     });
-  });
-
-  const institutes = await prisma.institute.findMany({
-    where: {
-      OR: [
-        { name: { contains: q, mode: "insensitive" } },
-        { shortName: { contains: q, mode: "insensitive" } },
-      ],
-    },
-    take: 3,
   });
 
   institutes.forEach((inst) => {
@@ -45,16 +62,6 @@ async function getSearchSuggestions(query) {
     });
   });
 
-  const areas = await prisma.researchArea.findMany({
-    where: {
-      name: { contains: q, mode: "insensitive" },
-    },
-    include: {
-      professors: true,
-    },
-    take: 3,
-  });
-
   areas.forEach((a) => {
     suggestions.push({
       id: slugify(a.name),
@@ -62,13 +69,6 @@ async function getSearchSuggestions(query) {
       label: a.name,
       sublabel: `${a.professors.length} researchers`,
     });
-  });
-
-  const pubs = await prisma.publication.findMany({
-    where: {
-      title: { contains: q, mode: "insensitive" },
-    },
-    take: 3,
   });
 
   pubs.forEach((pub) => {

@@ -2,49 +2,46 @@ const prisma = require("../config/db");
 const { slugify } = require("../utils/helpers");
 
 async function getAllPublications() {
-  const pubs = await prisma.publication.findMany({
-    include: {
-      professor: {
-        include: {
-          department: { include: { institute: true } },
-        },
-      },
-    },
-    orderBy: { year: "desc" },
-  });
+  const pubs = await prisma.$queryRaw`
+    SELECT pub.id, pub.title, pub.journal, pub.year, pub."citationCount", pub.doi,
+      p.name as "profName",
+      d.name as "deptName",
+      i."shortName" as "instShort"
+    FROM "Publication" pub
+    LEFT JOIN "Professor" p ON pub."professorId" = p.id
+    LEFT JOIN "Department" d ON p."departmentId" = d.id
+    LEFT JOIN "Institute" i ON d."instituteId" = i.id
+    ORDER BY pub.year DESC NULLS LAST
+    LIMIT 500
+  `;
 
   return pubs.map((pub) => transformPublication(pub));
 }
 
 async function getPublicationsByProfessor(professorId) {
-  const profNumId = parseInt(professorId.replace("p", ""));
+  const profNumId = parseInt(professorId.replace("p", "").replace(/^0+/, ""));
   if (isNaN(profNumId)) return [];
 
-  const pubs = await prisma.publication.findMany({
-    where: { professorId: profNumId },
-    include: {
-      professor: {
-        include: {
-          department: { include: { institute: true } },
-        },
-      },
-    },
-    orderBy: { year: "desc" },
-  });
+  const pubs = await prisma.$queryRaw`
+    SELECT pub.id, pub.title, pub.journal, pub.year, pub."citationCount", pub.doi,
+      p.name as "profName",
+      d.name as "deptName",
+      i."shortName" as "instShort"
+    FROM "Publication" pub
+    LEFT JOIN "Professor" p ON pub."professorId" = p.id
+    LEFT JOIN "Department" d ON p."departmentId" = d.id
+    LEFT JOIN "Institute" i ON d."instituteId" = i.id
+    WHERE pub."professorId" = ${profNumId}
+    ORDER BY pub.year DESC NULLS LAST
+  `;
 
   return pubs.map((pub) => transformPublication(pub));
 }
 
 function transformPublication(pub) {
   const id = `pub${String(pub.id).padStart(4, "0")}`;
-
-  const authors = pub.professor
-    ? [pub.professor.name]
-    : [];
-
-  const areaId = pub.professor
-    ? slugify(pub.professor.department?.name || "general")
-    : "general";
+  const authors = pub.profName ? [pub.profName] : [];
+  const areaId = pub.deptName ? slugify(pub.deptName) : "general";
 
   return {
     id,

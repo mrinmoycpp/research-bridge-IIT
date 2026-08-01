@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { X, AlertTriangle, Github, Linkedin } from "lucide-react";
+import { X, AlertTriangle, ExternalLink } from "lucide-react";
 
 const DISCLAIMER_KEY = "researchbridge:disclaimer-seen";
 
@@ -121,7 +121,7 @@ export function DisclaimerPopup() {
                 rel="noopener noreferrer"
                 className="text-stone hover:text-neon"
               >
-                <Github size={14} />
+                GitHub <ExternalLink size={12} className="inline" />
               </a>
               <a
                 href="https://www.linkedin.com/in/mrinmoy-d-4ab091379/"
@@ -129,7 +129,7 @@ export function DisclaimerPopup() {
                 rel="noopener noreferrer"
                 className="text-stone hover:text-neon"
               >
-                <Linkedin size={14} />
+                LinkedIn <ExternalLink size={12} className="inline" />
               </a>
             </p>
           </section>

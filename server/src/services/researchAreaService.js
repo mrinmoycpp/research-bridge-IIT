@@ -7,45 +7,55 @@ const {
 } = require("../utils/helpers");
 
 async function getAllResearchAreas() {
-  const areas = await prisma.researchArea.findMany({
-    include: {
-      _count: { select: { professors: true } },
-    },
-    orderBy: { name: "asc" },
-  });
+  const areas = await prisma.$queryRaw`
+    SELECT ra.id, ra.name, ra.description,
+      (SELECT COUNT(*)::int FROM "ProfessorResearchArea" pra WHERE pra."researchAreaId" = ra.id) as "profCount"
+    FROM "ResearchArea" ra
+    ORDER BY ra.name ASC
+  `;
 
   return areas.map((area) => transformResearchAreaLite(area));
 }
 
 async function getResearchAreaBySlug(slug) {
-  const area = await prisma.researchArea.findFirst({
-    where: {
-      name: {
-        equals: slug.replace(/-/g, " "),
-        mode: "insensitive",
-      },
-    },
-    include: {
-      professors: true,
-    },
-  });
+  const areaName = slug.replace(/-/g, " ");
 
-  if (!area) {
-    const all = await prisma.researchArea.findMany({ include: { professors: true } });
-    const found = all.find((a) => slugify(a.name) === slug);
-    return found ? transformResearchAreaFull(found) : undefined;
+  const rows = await prisma.$queryRaw`
+    SELECT ra.id, ra.name, ra.description
+    FROM "ResearchArea" ra
+    WHERE LOWER(ra.name) = LOWER(${areaName})
+    LIMIT 1
+  `;
+
+  if (!rows.length) {
+    const all = await prisma.$queryRaw`SELECT ra.id, ra.name, ra.description FROM "ResearchArea" ra`;
+    const match = all.find((a) => slugify(a.name) === slug);
+    if (!match) return undefined;
+    return buildFullArea(match.id, match.name, match.description);
   }
 
-  return transformResearchAreaFull(area);
+  return buildFullArea(rows[0].id, rows[0].name, rows[0].description);
 }
 
-function transformResearchAreaLite(area) {
-  const id = slugify(area.name);
-  const seed = hashString(area.name);
+async function buildFullArea(areaId, areaName, areaDesc) {
+  const id = slugify(areaName);
+  const seed = hashString(areaName);
   const rand = seededRandom(seed);
 
-  const professorCount = area._count?.professors || 0;
-  const publicationCount = professorCount * (3 + (seed % 5));
+  const [profCountResult, pubResult] = await Promise.all([
+    prisma.$queryRaw`
+      SELECT COUNT(*)::int as count FROM "ProfessorResearchArea" WHERE "researchAreaId" = ${areaId}
+    `,
+    prisma.$queryRaw`
+      SELECT COUNT(*)::int as count
+      FROM "Publication" p
+      INNER JOIN "ProfessorResearchArea" pra ON pra."professorId" = p."professorId"
+      WHERE pra."researchAreaId" = ${areaId}
+    `,
+  ]);
+
+  const professorCount = profCountResult[0]?.count || 0;
+  const publicationCount = pubResult[0]?.count || 0;
 
   const numTopics = 3 + Math.floor(rand() * 3);
   const shuffled = [...TRENDING_TOPICS].sort(() => rand() - 0.5);
@@ -53,31 +63,24 @@ function transformResearchAreaLite(area) {
 
   return {
     id,
-    name: area.name,
+    name: areaName,
     slug: id,
     description:
-      area.description ||
-      `${area.name} is an active research domain spanning theoretical foundations and applied engineering, with ${professorCount} researchers contributing to the field.`,
+      areaDesc ||
+      `${areaName} is an active research domain spanning theoretical foundations and applied engineering, with ${professorCount} researchers contributing to the field.`,
     trendingTopics,
     professorCount,
     publicationCount,
   };
 }
 
-async function transformResearchAreaFull(area) {
+function transformResearchAreaLite(area) {
   const id = slugify(area.name);
   const seed = hashString(area.name);
   const rand = seededRandom(seed);
 
-  const professorCount = area.professors.length;
-
-  const pubResult = await prisma.$queryRaw`
-    SELECT COUNT(*)::int as count
-    FROM "Publication" p
-    INNER JOIN "ProfessorResearchArea" pra ON pra."professorId" = p."professorId"
-    WHERE pra."researchAreaId" = ${area.id}
-  `;
-  const publicationCount = pubResult[0]?.count || 0;
+  const professorCount = area.profCount || 0;
+  const publicationCount = professorCount * (3 + (seed % 5));
 
   const numTopics = 3 + Math.floor(rand() * 3);
   const shuffled = [...TRENDING_TOPICS].sort(() => rand() - 0.5);
