@@ -15,7 +15,7 @@ export function IITExplorer() {
     <div className="mx-auto max-w-[1400px] px-6 py-12 lg:px-10">
       <div className="border-b border-hairline pb-8">
         <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-brass">
-          Seven Institutes
+          16 Institutes
         </span>
         <h1 className="mt-2 font-display text-4xl text-ink sm:text-5xl">
           The IIT System

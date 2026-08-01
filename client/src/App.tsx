@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./hooks/useAuth";
 import { ThemeProvider } from "./hooks/useTheme";
 import { MainLayout } from "./layouts/MainLayout";
+import { DisclaimerPopup } from "./components/DisclaimerPopup";
 import { Landing } from "./pages/Landing";
 import { Discover } from "./pages/Discover";
 import { ProfessorProfile } from "./pages/ProfessorProfile";
@@ -21,6 +22,7 @@ function App() {
     <BrowserRouter>
       <ThemeProvider>
         <AuthProvider>
+          <DisclaimerPopup />
           <Routes>
             <Route element={<MainLayout />}>
               <Route path="/" element={<Landing />} />
