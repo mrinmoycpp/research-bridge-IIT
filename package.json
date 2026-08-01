@@ -1,0 +1,12 @@
+{
+  "name": "researchbridge",
+  "version": "1.0.0",
+  "description": "IIT Professor Database — Discover. Connect. Collaborate.",
+  "scripts": {
+    "start": "echo Run 'cd server && npm start' and 'cd client && npm start' in separate terminals",
+    "server": "cd server && npm start",
+    "client": "cd client && npm start"
+  },
+  "author": "mrinmoycpp",
+  "license": "MIT"
+}
