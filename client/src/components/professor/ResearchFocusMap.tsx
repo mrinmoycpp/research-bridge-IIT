@@ -21,6 +21,11 @@ export function ResearchFocusMap({ areaIds }: { areaIds: string[] }) {
             >
               {area!.name}
             </Link>
+            {area!.description && (
+              <p className="mt-2 text-sm leading-relaxed text-stone">
+                {area!.description}
+              </p>
+            )}
             <div className="relative mt-5 pl-4">
               <span className="absolute left-0 top-0 h-full w-px bg-hairline-strong" />
               <ul className="space-y-3">
