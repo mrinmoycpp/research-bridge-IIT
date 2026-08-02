@@ -1,4 +1,4 @@
-import type { AcademicPosition, AvailabilityStatus, DiscoverFilters } from "../types";
+import type { AcademicPosition, DiscoverFilters } from "../types";
 import { iits } from "../data/iits";
 import { researchAreas } from "../data/researchAreas";
 import { professors } from "../data/professors";
@@ -11,8 +11,6 @@ const positions: AcademicPosition[] = [
   "Institute Chair Professor",
   "Emeritus Professor",
 ];
-
-const availabilities: AvailabilityStatus[] = ["open", "limited", "closed"];
 
 const departments = Array.from(new Set(professors.map((p) => p.department))).sort();
 
@@ -107,20 +105,6 @@ export function FilterPanel({
           {positions.map((p) => (
             <Pill key={p} active={filters.position === p} onClick={() => set("position", p)}>
               {p}
-            </Pill>
-          ))}
-        </div>
-      </Section>
-
-      <Section title="Availability">
-        <div className="flex flex-wrap gap-2">
-          {availabilities.map((a) => (
-            <Pill
-              key={a}
-              active={filters.availability === a}
-              onClick={() => set("availability", a)}
-            >
-              {a === "open" ? "Open for students" : a === "limited" ? "Limited capacity" : "Not taking students"}
             </Pill>
           ))}
         </div>
