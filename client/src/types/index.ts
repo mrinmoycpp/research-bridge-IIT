@@ -79,6 +79,7 @@ export interface ResearchArea {
   trendingTopics: string[];
   professorCount: number;
   publicationCount: number;
+  relatedAreas?: string[];
 }
 
 export interface SearchSuggestion {

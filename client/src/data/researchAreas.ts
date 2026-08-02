@@ -16,6 +16,7 @@ export const researchAreas: ResearchArea[] = [
     ],
     professorCount: 41,
     publicationCount: 1284,
+    relatedAreas: ["computer-vision", "robotics", "computational-neuroscience", "cybersecurity"],
   },
   {
     id: "computer-vision",
@@ -31,6 +32,7 @@ export const researchAreas: ResearchArea[] = [
     ],
     professorCount: 22,
     publicationCount: 617,
+    relatedAreas: ["ai-ml", "robotics", "materials-science"],
   },
   {
     id: "quantum-computing",
@@ -46,6 +48,7 @@ export const researchAreas: ResearchArea[] = [
     ],
     professorCount: 14,
     publicationCount: 298,
+    relatedAreas: ["cybersecurity", "computational-neuroscience", "materials-science"],
   },
   {
     id: "biotechnology",
@@ -61,6 +64,7 @@ export const researchAreas: ResearchArea[] = [
     ],
     professorCount: 19,
     publicationCount: 432,
+    relatedAreas: ["computational-neuroscience", "materials-science"],
   },
   {
     id: "robotics",
@@ -76,6 +80,7 @@ export const researchAreas: ResearchArea[] = [
     ],
     professorCount: 17,
     publicationCount: 389,
+    relatedAreas: ["ai-ml", "computer-vision", "aerospace"],
   },
   {
     id: "climate-science",
@@ -91,6 +96,7 @@ export const researchAreas: ResearchArea[] = [
     ],
     professorCount: 12,
     publicationCount: 276,
+    relatedAreas: ["materials-science", "aerospace"],
   },
   {
     id: "materials-science",
@@ -106,6 +112,7 @@ export const researchAreas: ResearchArea[] = [
     ],
     professorCount: 24,
     publicationCount: 541,
+    relatedAreas: ["biotechnology", "climate-science", "quantum-computing", "computer-vision"],
   },
   {
     id: "aerospace",
@@ -121,6 +128,7 @@ export const researchAreas: ResearchArea[] = [
     ],
     professorCount: 15,
     publicationCount: 312,
+    relatedAreas: ["robotics", "climate-science"],
   },
   {
     id: "cybersecurity",
@@ -136,6 +144,7 @@ export const researchAreas: ResearchArea[] = [
     ],
     professorCount: 16,
     publicationCount: 344,
+    relatedAreas: ["quantum-computing", "ai-ml"],
   },
   {
     id: "computational-neuroscience",
@@ -151,6 +160,7 @@ export const researchAreas: ResearchArea[] = [
     ],
     professorCount: 9,
     publicationCount: 187,
+    relatedAreas: ["ai-ml", "biotechnology", "quantum-computing"],
   },
 ];
 

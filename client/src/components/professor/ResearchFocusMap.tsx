@@ -44,6 +44,28 @@ export function ResearchFocusMap({ areaIds }: { areaIds: string[] }) {
                 ))}
               </ul>
             </div>
+            {area!.relatedAreas && area!.relatedAreas.length > 0 && (
+              <div className="mt-5">
+                <p className="font-mono text-[10px] font-semibold tracking-widest text-stone-light">
+                  RELATED
+                </p>
+                <div className="mt-2 flex flex-wrap gap-1.5">
+                  {area!.relatedAreas.map((relId) => {
+                    const rel = getAreaById(relId);
+                    if (!rel) return null;
+                    return (
+                      <Link
+                        key={relId}
+                        to={`/research-areas/${rel.slug}`}
+                        className="border border-hairline-strong px-2 py-0.5 font-mono text-[10px] text-stone hover:border-navy hover:text-navy"
+                      >
+                        {rel.name}
+                      </Link>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
           </div>
         ))}
       </div>
