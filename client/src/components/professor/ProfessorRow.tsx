@@ -46,7 +46,6 @@ export function ProfessorRow({
         <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 font-mono text-xs text-stone">
           <span>{formatNumber(professor.publicationCount)} pubs</span>
           <span>{formatNumber(professor.citationCount)} cite</span>
-          <AvailabilityDot status={professor.availability} />
         </div>
       </div>
 

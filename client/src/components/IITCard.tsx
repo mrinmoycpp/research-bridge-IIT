@@ -17,7 +17,7 @@ export function IITCard({ iit, index }: { iit: IIT; index: number }) {
         {iit.code}
       </h3>
       <p className="mt-1 font-mono text-xs text-stone">
-        {iit.city}, {iit.state} · Est. {iit.established}
+        {iit.city}, {iit.state}
       </p>
 
       <p className="mt-3 text-sm leading-relaxed text-stone line-clamp-2">
