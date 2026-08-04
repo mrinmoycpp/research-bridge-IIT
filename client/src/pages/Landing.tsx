@@ -33,6 +33,7 @@ export function Landing() {
         <div className="scanline absolute inset-0" />
 
         <div className="relative mx-auto max-w-[1400px] px-6 py-24 lg:px-10 lg:py-32">
+          <div className="grid grid-cols-1 gap-10 lg:grid-cols-[1fr_320px]">
           <div className="max-w-3xl">
             <div className="animate-in inline-flex items-center gap-2 border border-neon/30 bg-neon-dim px-3 py-1 font-mono text-xs font-medium text-neon">
               <span className="h-1.5 w-1.5 rounded-full bg-neon pulse" />
@@ -52,6 +53,29 @@ export function Landing() {
               <br />
               <span className="text-stone">Filter. Connect. Track applications.</span>
             </p>
+          </div>
+
+          {/* Disclaimer */}
+          <div className="hidden lg:block">
+            <div className="border border-hairline bg-card p-5">
+              <p className="font-mono text-[10px] font-semibold tracking-widest text-stone-light">
+                DISCLAIMER
+              </p>
+              <p className="mt-2 text-xs leading-relaxed text-stone">
+                Data sourced from publicly available IIT faculty pages and Google Scholar.
+                May not be fully accurate or up-to-date.
+              </p>
+              <p className="mt-2 text-xs leading-relaxed text-stone">
+                Not affiliated with any IIT or the Government of India.
+              </p>
+              <p className="mt-2 text-[10px] text-stone-light">
+                Available: 16 IITs &middot; Coming Soon: Madras, Kanpur, Roorkee
+              </p>
+              <p className="mt-2 font-mono text-[10px] text-stone-light">
+                Built by <span className="text-neon">mrinmoycpp</span>
+              </p>
+            </div>
+          </div>
           </div>
 
           {/* Search */}
