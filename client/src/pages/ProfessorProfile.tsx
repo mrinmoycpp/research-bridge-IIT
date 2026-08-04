@@ -112,7 +112,7 @@ export function ProfessorProfile() {
 
             <div className="mt-8 flex flex-wrap items-center gap-3">
               <a
-                href={`mailto:${professor.email}`}
+                href={`https://mail.google.com/mail/?view=cm&fs=1&to=${professor.email}`}
                 className="flex items-center gap-2 border border-hairline-strong px-3.5 py-2 text-xs text-ink-soft hover:border-navy hover:text-navy"
               >
                 <Mail size={13} /> {professor.email}
