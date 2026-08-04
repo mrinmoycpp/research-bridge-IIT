@@ -3,9 +3,11 @@
   "version": "1.0.0",
   "description": "IIT Professor Database — Discover. Connect. Collaborate.",
   "scripts": {
-    "start": "echo Run 'cd server && npm start' and 'cd client && npm start' in separate terminals",
+    "start": "node server/server.js",
+    "build": "cd client && npm install && npm run build",
     "server": "cd server && npm start",
-    "client": "cd client && npm start"
+    "client": "cd client && npm start",
+    "setup": "cd server && npm install && cd ../client && npm install"
   },
   "author": "mrinmoycpp",
   "license": "MIT"

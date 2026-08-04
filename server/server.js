@@ -9,6 +9,7 @@ process.on("unhandledRejection", (err) => {
 
 const express = require("express");
 const cors = require("cors");
+const path = require("path");
 const apiRoutes = require("./src/routes");
 const errorHandler = require("./src/middlewares/errorHandler");
 const prisma = require("./src/config/db");
@@ -34,6 +35,12 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api", apiRoutes);
+
+const clientBuild = path.join(__dirname, "..", "client", "dist");
+app.use(express.static(clientBuild));
+app.get("*", (req, res) => {
+  res.sendFile(path.join(clientBuild, "index.html"));
+});
 
 app.use(errorHandler);
 
