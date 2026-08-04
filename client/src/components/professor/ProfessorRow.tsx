@@ -2,7 +2,6 @@ import { Link } from "react-router-dom";
 import type { Professor } from "../../types";
 import { AreaTag } from "../shared/AreaTag";
 import { SaveButton } from "../shared/SaveButton";
-import { AvailabilityDot } from "../shared/AvailabilityDot";
 import { formatNumber, catalogNumber } from "../../lib/utils";
 import { useSaved } from "../../hooks/useSaved";
 

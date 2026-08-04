@@ -4,12 +4,10 @@ export interface IIT {
   name: string;
   city: string;
   state: string;
-  established: number;
   description: string;
   departments: number;
   professorCount: number;
   popularAreas: string[];
-  ranking?: string;
 }
 
 export interface Publication {

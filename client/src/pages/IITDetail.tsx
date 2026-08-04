@@ -43,7 +43,7 @@ export function IITDetail() {
       <section className="border-b border-hairline">
         <div className="mx-auto max-w-[1400px] px-6 py-14 lg:px-10 lg:py-20">
           <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-brass">
-            Est. {iit.established} &middot; {iit.ranking}
+            {iit.code}
           </span>
           <h1 className="mt-2 font-display text-4xl text-ink sm:text-5xl">{iit.code}</h1>
           <p className="mt-2 flex items-center gap-1.5 text-sm text-stone">

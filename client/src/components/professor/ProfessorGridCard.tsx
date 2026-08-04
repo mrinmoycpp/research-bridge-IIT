@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
 import type { Professor } from "../../types";
 import { SaveButton } from "../shared/SaveButton";
-import { AvailabilityDot } from "../shared/AvailabilityDot";
 import { formatNumber } from "../../lib/utils";
 import { useSaved } from "../../hooks/useSaved";
 
@@ -38,7 +37,6 @@ export function ProfessorGridCard({ professor }: { professor: Professor }) {
         <div className="flex items-center gap-3 font-mono text-xs text-stone">
           <span>{formatNumber(professor.publicationCount)} pubs</span>
           <span>{formatNumber(professor.citationCount)} cite</span>
-          <AvailabilityDot status={professor.availability} showLabel={false} />
         </div>
         <span className="font-mono text-xs text-stone-light transition-colors group-hover:text-neon">
           →

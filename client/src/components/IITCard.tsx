@@ -10,9 +10,7 @@ export function IITCard({ iit, index }: { iit: IIT; index: number }) {
     >
       <div className="flex items-start justify-between">
         <span className="linenum">{String(index + 1).padStart(2, "0")}</span>
-        {iit.ranking && (
-          <span className="badge bg-amber-dim text-amber">{iit.ranking}</span>
-        )}
+
       </div>
 
       <h3 className="mt-3 text-lg font-bold tracking-tight text-ink group-hover:text-neon">

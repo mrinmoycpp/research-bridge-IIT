@@ -1,145 +1,103 @@
-import { useState } from "react";
-import { X, AlertTriangle, ExternalLink } from "lucide-react";
+import { useState, useEffect } from "react";
+import { AlertTriangle, X } from "lucide-react";
 
-const DISCLAIMER_KEY = "researchbridge:disclaimer-seen";
-
-const AVAILABLE_IITS = [
-  "IIT Bhilai", "IIT BHU", "IIT Bombay", "IIT Bhubaneswar", "IIT Delhi",
-  "IIT Dharwad", "IIT Gandhinagar", "IIT Goa", "IIT Guwahati", "IIT Indore",
-  "IIT Jammu", "IIT Jodhpur", "IIT Kharagpur", "IIT Palakkad", "IIT ROPAR",
-  "IIT Tirupati",
-];
-
-const COMING_SOON = ["IIT Madras", "IIT Kanpur", "IIT Roorkee"];
+const STORAGE_KEY = "researchbridge:disclaimer-seen";
 
 export function DisclaimerPopup() {
-  const [open, setOpen] = useState(() => {
-    try {
-      return !localStorage.getItem(DISCLAIMER_KEY);
-    } catch {
-      return true;
-    }
-  });
+  const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    const seen = localStorage.getItem(STORAGE_KEY);
+    if (!seen) setOpen(true);
+  }, []);
+
+  const dismiss = () => {
+    localStorage.setItem(STORAGE_KEY, "1");
+    setOpen(false);
+  };
 
   if (!open) return null;
 
-  function accept() {
-    try {
-      localStorage.setItem(DISCLAIMER_KEY, "1");
-    } catch {}
-    setOpen(false);
-  }
-
   return (
-    <div
-      className="fixed inset-0 z-[100] flex items-center justify-center bg-ink/60 px-4 backdrop-blur-sm"
-      onMouseDown={(e) => { if (e.target === e.currentTarget) accept(); }}
-    >
-      <div className="relative w-full max-w-lg border border-neon/30 bg-card p-6 shadow-[0_0_40px_rgba(34,211,238,0.08)]">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 p-4">
+      <div className="relative w-full max-w-lg border border-hairline bg-card p-6 sm:p-8">
         <button
-          onClick={accept}
-          className="absolute right-3 top-3 text-stone hover:text-neon"
+          onClick={dismiss}
+          className="absolute right-3 top-3 text-stone-light hover:text-ink"
         >
           <X size={16} />
         </button>
 
-        <div className="mb-4 flex items-center gap-2">
-          <AlertTriangle size={18} className="text-neon" />
-          <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-neon">
-            Disclaimer &amp; Terms
-          </span>
+        <div className="flex items-start gap-3">
+          <AlertTriangle size={18} className="mt-0.5 shrink-0 text-amber" />
+          <div>
+            <h2 className="text-lg font-bold tracking-tight text-ink">
+              Terms &amp; Conditions
+            </h2>
+            <p className="mt-1 font-mono text-[10px] uppercase tracking-widest text-stone-light">
+              Please read before using this platform
+            </p>
+          </div>
         </div>
 
-        <h2 className="font-display text-xl text-ink">
-          ResearchBridge — IIT Professor Database
-        </h2>
-
-        <div className="mt-4 space-y-4 text-sm leading-relaxed text-ink-soft">
-          <section>
-            <h3 className="mb-1 font-mono text-[11px] uppercase tracking-wide text-stone">
-              // Data Source
-            </h3>
-            <p>
-              Faculty data is publicly scraped from official IIT department websites
-              and research group pages. Information may be outdated or incomplete.
-              Always verify with the institute directly.
+        <div className="mt-5 space-y-4 text-sm leading-relaxed text-ink-soft">
+          <div>
+            <p className="font-mono text-[10px] font-semibold tracking-widest text-stone-light">
+              DATA SOURCE
             </p>
-          </section>
-
-          <section>
-            <h3 className="mb-1 font-mono text-[11px] uppercase tracking-wide text-stone">
-              // Available IITs (16)
-            </h3>
-            <div className="flex flex-wrap gap-1.5">
-              {AVAILABLE_IITS.map((iit) => (
-                <span
-                  key={iit}
-                  className="border border-neon/20 px-2 py-0.5 font-mono text-[10px] text-neon/80"
-                >
-                  {iit}
-                </span>
-              ))}
-            </div>
-          </section>
-
-          <section>
-            <h3 className="mb-1 font-mono text-[11px] uppercase tracking-wide text-stone">
-              // Coming Soon
-            </h3>
-            <div className="flex flex-wrap gap-1.5">
-              {COMING_SOON.map((iit) => (
-                <span
-                  key={iit}
-                  className="border border-amber/30 px-2 py-0.5 font-mono text-[10px] text-amber/80"
-                >
-                  {iit}
-                </span>
-              ))}
-            </div>
-          </section>
-
-          <section>
-            <h3 className="mb-1 font-mono text-[11px] uppercase tracking-wide text-stone">
-              // Terms of Use
-            </h3>
-            <p>
-              This tool is for academic and research purposes only. Do not use the
-              listed contact information for unsolicited outreach. By proceeding,
-              you agree to use this data responsibly.
+            <p className="mt-1">
+              Professor data is scraped from publicly available IIT faculty pages
+              and Google Scholar profiles. Information may not be fully accurate
+              or up-to-date.
             </p>
-          </section>
+          </div>
 
-          <section>
-            <h3 className="mb-1 font-mono text-[11px] uppercase tracking-wide text-stone">
-              // Built By
-            </h3>
-            <p className="flex items-center gap-2">
-              <span className="text-neon">mrinmoycpp</span>
-              <a
-                href="https://github.com/mrinmoycpp"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-stone hover:text-neon"
-              >
-                GitHub <ExternalLink size={12} className="inline" />
-              </a>
-              <a
-                href="https://www.linkedin.com/in/mrinmoy-d-4ab091379/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-stone hover:text-neon"
-              >
-                LinkedIn <ExternalLink size={12} className="inline" />
-              </a>
+          <div>
+            <p className="font-mono text-[10px] font-semibold tracking-widest text-stone-light">
+              AVAILABLE IITs
             </p>
-          </section>
+            <p className="mt-1">
+              Currently listing <span className="text-neon font-medium">16 IITs</span>:
+              Bhilai, BHU, Bhubaneswar, Bombay, Delhi, Dharwad, Gandhinagar,
+              Goa, Guwahati, Indore, Jammu, Jodhpur, Kharagpur, Palakkad,
+              ROPAR, Tirupati.
+            </p>
+            <p className="mt-1">
+              <span className="text-amber font-medium">Coming Soon:</span>{" "}
+              IIT Madras, IIT Kanpur, IIT Roorkee.
+            </p>
+          </div>
+
+          <div>
+            <p className="font-mono text-[10px] font-semibold tracking-widest text-stone-light">
+              DISCLAIMER
+            </p>
+            <p className="mt-1">
+              This is a student project built for educational and informational
+              purposes only. It is not affiliated with, endorsed by, or connected
+              to any Indian Institute of Technology (IIT) or the Government of
+              India. Contact details are sourced from publicly available faculty
+              pages and may change.
+            </p>
+          </div>
+
+          <div>
+            <p className="font-mono text-[10px] font-semibold tracking-widest text-stone-light">
+              CREDITS
+            </p>
+            <p className="mt-1">
+              Built by <span className="text-neon font-medium">mrinmoycpp</span>.
+              Data collected from publicly available sources. For official
+              information, please visit the respective institute's website.
+            </p>
+          </div>
         </div>
 
         <button
-          onClick={accept}
-          className="btn-neon mt-6 w-full py-2.5 text-center text-sm"
+          onClick={dismiss}
+          className="mt-6 w-full border border-neon bg-neon-dim py-2.5 font-mono text-xs font-medium text-neon transition-all hover:bg-neon hover:text-paper"
         >
-          I Understand — Continue
+          I understand, continue
         </button>
       </div>
     </div>

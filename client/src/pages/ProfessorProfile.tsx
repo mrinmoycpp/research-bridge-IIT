@@ -19,7 +19,6 @@ import {
 import { getIITById } from "../data/iits";
 import { AreaTag } from "../components/shared/AreaTag";
 import { SaveButton } from "../components/shared/SaveButton";
-import { AvailabilityDot } from "../components/shared/AvailabilityDot";
 import { ResearchFocusMap } from "../components/professor/ResearchFocusMap";
 import { PublicationItem } from "../components/professor/PublicationItem";
 import { Timeline } from "../components/professor/Timeline";
@@ -82,7 +81,6 @@ export function ProfessorProfile() {
               <span className="badge bg-neon-dim text-neon">
                 {iit?.code}
               </span>
-              <AvailabilityDot status={professor.availability} />
             </div>
             <h1 className="mt-4 text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
               {professor.name}

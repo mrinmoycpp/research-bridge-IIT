@@ -51,7 +51,7 @@ export function Footer() {
           <p className="mt-2 text-xs leading-relaxed text-stone">
             This is a student project built for educational and informational purposes only.
             The data presented here is compiled from publicly available sources including
-            institute websites, Google Scholar, and NIRF rankings. This project is not
+            institute websites and Google Scholar. This project is not
             affiliated with, endorsed by, or connected to any Indian Institute of Technology
             (IIT) or the Government of India. Professor information may not be fully accurate
             or up-to-date. For official information, please visit the respective institute's
@@ -69,7 +69,6 @@ export function Footer() {
           <ul className="mt-2 space-y-1 text-xs leading-relaxed text-stone">
             <li>• Institute websites and official faculty pages</li>
             <li>• Google Scholar profiles and citation data</li>
-            <li>• NIRF (National Institutional Ranking Framework) rankings</li>
             <li>• Publicly available research publication databases</li>
             <li>• Official IIT department pages and brochures</li>
           </ul>

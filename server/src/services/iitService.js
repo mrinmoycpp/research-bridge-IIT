@@ -21,12 +21,10 @@ async function getAllIITs() {
       name: inst.name,
       city: meta.city,
       state: meta.state,
-      established: meta.established,
       description: meta.description,
       departments: inst.deptCount,
       professorCount: inst.profCount,
       popularAreas: [],
-      ranking: meta.ranking,
     };
   });
 }
@@ -56,12 +54,10 @@ async function getIITById(id) {
     name: inst.name,
     city: meta.city,
     state: meta.state,
-    established: meta.established,
     description: meta.description,
     departments: inst.deptCount,
     professorCount: inst.profCount,
     popularAreas: [],
-    ranking: meta.ranking,
   };
 }
 
