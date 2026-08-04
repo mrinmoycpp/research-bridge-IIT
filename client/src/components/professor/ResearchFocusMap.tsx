@@ -26,24 +26,31 @@ export function ResearchFocusMap({ areaIds }: { areaIds: string[] }) {
                 {area!.description}
               </p>
             )}
-            <div className="relative mt-5 pl-4">
-              <span className="absolute left-0 top-0 h-full w-px bg-hairline-strong" />
-              <ul className="space-y-3">
-                {area!.trendingTopics.slice(0, 4).map((topic, i) => (
-                  <li key={topic} className="relative flex items-center gap-2.5 pl-2">
-                    <span
-                      className="absolute -left-[17px] h-px bg-hairline-strong"
-                      style={{ width: 12 }}
-                    />
-                    <span
-                      className="h-1.5 w-1.5 shrink-0 rounded-full bg-brass"
-                      style={{ opacity: 1 - i * 0.16 }}
-                    />
-                    <span className="text-sm text-ink-soft">{topic}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
+            {area!.trendingTopics.length > 0 && (
+              <div className="mt-5">
+                <p className="font-mono text-[10px] font-semibold tracking-widest text-stone-light">
+                  AREAS OF INTEREST
+                </p>
+                <div className="relative mt-3 pl-4">
+                  <span className="absolute left-0 top-0 h-full w-px bg-hairline-strong" />
+                  <ul className="space-y-3">
+                    {area!.trendingTopics.slice(0, 4).map((topic, i) => (
+                      <li key={topic} className="relative flex items-center gap-2.5 pl-2">
+                        <span
+                          className="absolute -left-[17px] h-px bg-hairline-strong"
+                          style={{ width: 12 }}
+                        />
+                        <span
+                          className="h-1.5 w-1.5 shrink-0 rounded-full bg-brass"
+                          style={{ opacity: 1 - i * 0.16 }}
+                        />
+                        <span className="text-sm text-ink-soft">{topic}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            )}
             {area!.relatedAreas && area!.relatedAreas.length > 0 && (
               <div className="mt-5">
                 <p className="font-mono text-[10px] font-semibold tracking-widest text-stone-light">
