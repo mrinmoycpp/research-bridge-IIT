@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
-import { X, ChevronDown, Mail, ExternalLink, Filter, Search } from "lucide-react";
+import { X, ChevronDown, Mail, ExternalLink, Search } from "lucide-react";
 import { useSaved } from "../hooks/useSaved";
 import { useAuth } from "../hooks/useAuth";
 import { useApplications } from "../hooks/useApplications";
@@ -19,7 +19,7 @@ const STATUS_OPTIONS: { value: ApplicationStatus; label: string; color: string; 
 export function Saved() {
   const { user } = useAuth();
   const { saved } = useSaved();
-  const { applications, loading: appsLoading, add, update, remove, isTracked } = useApplications();
+  const { applications, loading: appsLoading, update, remove } = useApplications();
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editNotes, setEditNotes] = useState("");
   const [filterStatus, setFilterStatus] = useState<ApplicationStatus | "all">("all");
